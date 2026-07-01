@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Button, Avatar } from "@heroui/react";
+import { ChevronDown } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -49,7 +50,7 @@ const Navbar = () => {
 
   const handleSignout = async () => {
     await authClient.signOut();
-    router.replace("/");
+    // router.replace("/");
   }
 
   return (
@@ -75,31 +76,70 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden items-center gap-10 md:flex">
-            <Link
-              href="/"
-              className="text-sm font-medium text-gray-600 dark:text-slate-300 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
-            >
-              Home
-            </Link>
-            <Link
-              href="/product"
-              className="text-sm font-medium text-gray-600 dark:text-slate-300 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
-            >
-              Product
-            </Link>
-            <Link
-              href="/features"
-              className="text-sm font-medium text-gray-600 dark:text-slate-300 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
-            >
-              Features
-            </Link>
-            <Link
-              href="/pricing"
-              className="text-sm font-medium text-gray-600 dark:text-slate-300 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
-            >
-              Pricing
-            </Link>
+            {!user ? (
+              <>
+                <Link
+                  href="/"
+                  className="text-sm font-medium text-gray-600 dark:text-slate-350 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/#features-showcase"
+                  className="text-sm font-medium text-gray-600 dark:text-slate-350 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
+                >
+                  Features
+                </Link>
+                <Link
+                  href="/#how-goalpilot-restructures"
+                  className="text-sm font-medium text-gray-600 dark:text-slate-350 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
+                >
+                  Designed For
+                </Link>
+                <Link
+                  href="/#pricing-flight-license"
+                  className="text-sm font-medium text-gray-600 dark:text-slate-350 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
+                >
+                  Pricing
+                </Link>
+              </>
+            ) : (
+              <div className="relative group py-2">
+                <Link
+                  href="/"
+                  className="flex items-center gap-1 text-sm font-medium text-gray-600 dark:text-slate-350 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400 focus:outline-none cursor-pointer"
+                >
+                  Home <ChevronDown className="w-4 h-4 text-gray-400 dark:text-slate-500" />
+                </Link>
+                <div className="absolute left-0 mt-1 w-40 rounded-xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-2 space-y-1">
+                  <Link
+                    href="/#features-showcase"
+                    className="px-3 py-2 text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    Features
+                  </Link>
+                  <Link
+                    href="/#how-goalpilot-restructures"
+                    className="px-3 py-2 text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    Designed For
+                  </Link>
+                  <Link
+                    href="/#pricing-flight-license"
+                    className="px-3 py-2 text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    Pricing
+                  </Link>
+                </div>
+              </div>
+            )}
             {user ? <>
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium text-gray-600 dark:text-slate-300 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
+              >
+                Dashboard
+              </Link>
               <Link
                 href="/habits"
                 className="text-sm font-medium text-gray-600 dark:text-slate-300 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
@@ -112,6 +152,20 @@ const Navbar = () => {
               >
                 Routine
               </Link>
+              <Link
+                href="/todolist"
+                className="text-sm font-medium text-gray-600 dark:text-slate-300 transition-all duration-300 hover:text-violet-600 dark:hover:text-violet-400"
+              >
+                Todolist
+              </Link>
+              {user.email === "shommo.nexus@gmail.com" && (
+                <Link
+                  href="/admin"
+                  className="text-sm font-bold text-rose-500 dark:text-rose-455 transition-all duration-300 hover:text-rose-700 dark:hover:text-rose-350"
+                >
+                  Admin Panel
+                </Link>
+              )}
             </> : ""}
           </div>
 
@@ -120,15 +174,25 @@ const Navbar = () => {
             {mounted && <DarkModeToggle dark={dark} onToggle={toggleDark} />}
             {user ? (
               <div className="flex items-center gap-3">
-                <Avatar
-                  src={user.image }
-                  name={user.name || "User"}
-                  size="sm"
-                  className="w-8 h-8 text-xs bg-violet-100 dark:bg-violet-950 text-violet-600 dark:text-violet-300 font-bold"
-                />
-                <span className="text-sm font-semibold text-gray-700 dark:text-slate-350 max-w-[120px] truncate">
-                  {user.name}
-                </span>
+                <Link href="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                  {user.image ? (
+                    <img
+                      src={user.image}
+                      alt={user.name || "User"}
+                      className="w-8 h-8 rounded-full object-cover border border-violet-500 cursor-pointer"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <Avatar
+                      name={user.name || "User"}
+                      size="sm"
+                      className="w-8 h-8 text-xs bg-violet-100 dark:bg-violet-950 text-violet-600 dark:text-violet-300 font-bold cursor-pointer"
+                    />
+                  )}
+                  <span className="text-sm font-semibold text-gray-700 dark:text-slate-350 max-w-[120px] truncate cursor-pointer">
+                    {user.name}
+                  </span>
+                </Link>
                 <Button
                   onClick={handleSignout}
                   variant="flat"
@@ -206,45 +270,94 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="border-t border-default-200 dark:border-slate-800 bg-white dark:bg-[#0a0f1e] md:hidden transition-colors duration-300">
             <div className="space-y-5 px-6 py-6">
-              <Link href="/" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
-                Home
-              </Link>
-              <Link href="/product" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
-                Product
-              </Link>
-              <Link href="/features" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
-                Features
-              </Link>
-              <Link href="/pricing" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
-                Pricing
-              </Link>
+              {!user ? (
+                <>
+                  <Link href="/" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                    Home
+                  </Link>
+                  <Link href="/#features-showcase" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                    Features
+                  </Link>
+                  <Link href="/#how-goalpilot-restructures" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                    Designed For
+                  </Link>
+                  <Link href="/#pricing-flight-license" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                    Pricing
+                  </Link>
+                </>
+              ) : (
+                <div className="space-y-2 text-left">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block font-mono pl-1">
+                    Home Navigation
+                  </span>
+                  <div className="pl-3 border-l border-slate-200 dark:border-slate-800 space-y-3">
+                    <Link href="/" className="block text-gray-700 dark:text-slate-300 text-sm font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                      Home Base
+                    </Link>
+                    <Link href="/#features-showcase" className="block text-gray-700 dark:text-slate-300 text-sm font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                      Features
+                    </Link>
+                    <Link href="/#how-goalpilot-restructures" className="block text-gray-700 dark:text-slate-300 text-sm font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                      Designed For
+                    </Link>
+                    <Link href="/#pricing-flight-license" className="block text-gray-700 dark:text-slate-300 text-sm font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                      Pricing
+                    </Link>
+                  </div>
+                </div>
+              )}
               {user ? <>
+                <Link href="/dashboard" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
+                  Dashboard
+                </Link>
                 <Link href="/habits" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
                   Habits
                 </Link>
                 <Link href="/routine" className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400">
                   Routine
                 </Link>
+                <Link
+                  href="/todolist"
+                  className="block text-gray-700 dark:text-slate-300 font-medium hover:text-violet-600 dark:hover:text-violet-400"
+                >
+                  Todolist
+                </Link>
+                {user.email === "shommo.nexus@gmail.com" && (
+                  <Link
+                    href="/admin"
+                    className="block text-rose-500 dark:text-rose-455 font-bold hover:text-rose-705 dark:hover:text-rose-350"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
               </> : ''}
               <div className="flex justify-center items-center gap-3 pt-2">
                 {user ? (
                   <div className="flex items-center justify-between w-full border-t border-slate-100 dark:border-slate-800/60 pt-4 mt-2">
-                    <div className="flex items-center gap-3">
-                      <Avatar
-                        src={user.image }
-                        name={user.name || "User"}
-                        size="sm"
-                        className="w-9 h-9 text-xs bg-violet-100 dark:bg-violet-950 text-violet-600 dark:text-violet-300 font-bold"
-                      />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-gray-900 dark:text-slate-100 leading-none mb-1">
+                    <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                      {user.image ? (
+                        <img
+                          src={user.image}
+                          alt={user.name || "User"}
+                          className="w-9 h-9 rounded-full object-cover border border-violet-500 cursor-pointer"
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <Avatar
+                          name={user.name || "User"}
+                          size="sm"
+                          className="w-9 h-9 text-xs bg-violet-100 dark:bg-violet-950 text-violet-600 dark:text-violet-300 font-bold cursor-pointer"
+                        />
+                      )}
+                      <div className="flex flex-col text-left">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-slate-100 leading-none mb-1 cursor-pointer">
                           {user.name}
                         </span>
-                        <span className="text-[11px] text-gray-500 dark:text-slate-400 leading-none">
+                        <span className="text-[11px] text-gray-500 dark:text-slate-400 leading-none cursor-pointer">
                           {user.email}
                         </span>
                       </div>
-                    </div>
+                    </Link>
                     <Button
                       onClick={handleSignout}
                       size="sm"

@@ -57,31 +57,43 @@ export default function HabitsTracker() {
   const [isMonthOpen, setIsMonthOpen] = useState(false);
   const yearDropdownRef = useRef(null);
   const monthDropdownRef = useRef(null);
+  const checklistContainerRef = useRef(null);
 
-   const router = useRouter();
+  const router = useRouter();
 
-    const {
-        data: session,
-        isPending
-    } = authClient.useSession();
+  const {
+    data: session,
+    isPending
+  } = authClient.useSession();
 
-    useEffect(() => {
+  // Core States — ALL hooks must be declared before any early return
+  const [habitsByMonth, setHabitsByMonth] = useState({});
+  const [history, setHistory] = useState({}); // format: { "habitId_YYYY-MM-DD": true }
+  const [archives, setArchives] = useState([]); // List of completed/archived habit logs
 
-        if (!isPending && !session) {
-            router.replace("/");
-        }
+  // Inline habit editing states
+  const [editingHabitId, setEditingHabitId] = useState(null);
+  const [editingHabitName, setEditingHabitName] = useState("");
 
-    }, [session, isPending]);
+  // Form input states for adding habit
+  const [newHabitName, setNewHabitName] = useState("");
+  const [newHabitGoal, setNewHabitGoal] = useState(30);
+  const [newHabitColor, setNewHabitColor] = useState("indigo");
 
-    if (isPending) {
-        return <div>Loading...</div>;
+  // Today tracker
+  const today = new Date();
+  const defaultTodayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const [todayStr, setTodayStr] = useState(defaultTodayStr);
+  const [clientDateLabel, setClientDateLabel] = useState(today.toLocaleDateString());
+
+  // Auth redirect effect
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.replace("/");
     }
+  }, [session, isPending, router]);
 
-    if (!session) {
-        return null;
-    }
-
-
+  // Outside click handler
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (yearDropdownRef.current && !yearDropdownRef.current.contains(e.target)) {
@@ -94,41 +106,6 @@ export default function HabitsTracker() {
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
-
-  // Core States
-  const [habitsByMonth, setHabitsByMonth] = useState({});
-  const [history, setHistory] = useState({}); // format: { "habitId_YYYY-MM-DD": true }
-  const [archives, setArchives] = useState([]); // List of completed/archived habit logs
-
-  const activeMonthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`;
-  const habits = habitsByMonth[activeMonthKey] || [];
-
-  const setHabits = (newHabitsOrFn) => {
-    setHabitsByMonth((prev) => {
-      const prevHabits = prev[activeMonthKey] || [];
-      const updatedHabits = typeof newHabitsOrFn === "function" ? newHabitsOrFn(prevHabits) : newHabitsOrFn;
-      return {
-        ...prev,
-        [activeMonthKey]: updatedHabits
-      };
-    });
-  };
-
-  // Inline habit editing states
-  const [editingHabitId, setEditingHabitId] = useState(null);
-  const [editingHabitName, setEditingHabitName] = useState("");
-
-  // Form input states for adding habit
-  const [newHabitName, setNewHabitName] = useState("");
-  const [newHabitGoal, setNewHabitGoal] = useState(30);
-  const [newHabitColor, setNewHabitColor] = useState("indigo");
-
-
-  // Today tracker
-  const today = new Date();
-  const defaultTodayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  const [todayStr, setTodayStr] = useState(defaultTodayStr);
-  const [clientDateLabel, setClientDateLabel] = useState(today.toLocaleDateString());
 
   // Run on mount
   useEffect(() => {
@@ -190,7 +167,42 @@ export default function HabitsTracker() {
     localStorage.setItem("vyro_archives", JSON.stringify(archives));
   }, [archives, mounted]);
 
-  if (!mounted) return null;
+  // Auto-scroll to today's active day column on mount or month switch
+  useEffect(() => {
+    if (!mounted || !checklistContainerRef.current) return;
+    
+    const timer = setTimeout(() => {
+      const activeCol = checklistContainerRef.current.querySelector("#active-day-col");
+      if (activeCol) {
+        activeCol.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [mounted, todayStr, selectedMonth, selectedYear, habitsByMonth]);
+
+  // ---- derived values (not hooks, safe after all hooks) ----
+  const activeMonthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`;
+  const habits = habitsByMonth[activeMonthKey] || [];
+
+  const setHabits = (newHabitsOrFn) => {
+    setHabitsByMonth((prev) => {
+      const prevHabits = prev[activeMonthKey] || [];
+      const updatedHabits = typeof newHabitsOrFn === "function" ? newHabitsOrFn(prevHabits) : newHabitsOrFn;
+      return {
+        ...prev,
+        [activeMonthKey]: updatedHabits
+      };
+    });
+  };
+
+  // ---- early returns AFTER all hooks ----
+  if (isPending || !mounted) return <div>Loading...</div>;
+  if (!session) return null;
 
   // Month info generator
   const getDaysInMonthList = (year, month) => {
@@ -725,7 +737,7 @@ export default function HabitsTracker() {
               Top Daily Habits
             </h3>
 
-            <div className="space-y-3 my-4 overflow-y-auto max-h-[140px] pr-1">
+            <div className="space-y-3 my-4 overflow-y-auto max-h-[140px] pr-1 scrollbar-none">
               {habits.length > 0 ? (
                 habits
                   .map((h) => {
@@ -769,7 +781,7 @@ export default function HabitsTracker() {
               Global Period Performance Overview
             </h3>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-none">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-800 text-[9px] font-mono text-slate-750 dark:text-slate-400">
@@ -910,7 +922,7 @@ export default function HabitsTracker() {
               </div>
             </div>
 
-            <div className="overflow-x-auto flex-1">
+            <div ref={checklistContainerRef} className="overflow-x-auto flex-1 scrollbar-none">
               <table className="w-full border-collapse">
                 <thead>
                   {/* Week Headers */}
@@ -944,6 +956,7 @@ export default function HabitsTracker() {
                       return (
                         <th
                           key={d.dateStr}
+                          id={isActive ? "active-day-col" : undefined}
                           className={`p-2 text-center min-w-[34px] border-r border-slate-100 dark:border-slate-800/40 ${isActive ? "bg-violet-100/50 dark:bg-violet-950/20 font-black text-violet-600 dark:text-violet-400" : ""
                             }`}
                         >
@@ -1108,7 +1121,7 @@ export default function HabitsTracker() {
               </span>
             </div>
 
-            <div className="flex-1 overflow-x-auto">
+            <div className="flex-1 overflow-x-auto scrollbar-none">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="h-10 border-b border-slate-200 dark:border-slate-800 bg-slate-50/20 dark:bg-slate-900/10 text-[9px] font-mono text-slate-500">

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Activity, Shield, RefreshCw, CheckCircle } from "lucide-react";
+import { Activity, Shield, RefreshCw, CheckCircle, Calendar, Sparkles, ListTodo, BarChart3, Lock, User } from "lucide-react";
 
 const handleStripeCheckout = async () => {
   if (!user) {
@@ -38,8 +38,131 @@ const Pages = () => {
 
   return (
     <div>
-      {/* Core Value/Human Transformation Sections (Replaces Course Cards) */}
-      <div className="bg-[#F8FAFC] dark:bg-[#1F2736] border-y border-[#E2E8F0] dark:border-[#2E3A4E] py-20 transition-all duration-200">
+      {/* 1. Features Showcase Section */}
+      <div id="features-showcase" className="bg-[#F8FAFC] dark:bg-[#1F2736] border-y border-[#E2E8F0] dark:border-[#2E3A4E] py-20 transition-all duration-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+            <span className="text-[#0D9488] text-xs font-mono uppercase tracking-widest font-bold">
+              GoalPilot Ecosystem
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-[#0F172A] dark:text-[#F8FAFC]">
+              Analyze What GoalPilot Can Do For You
+            </h2>
+            <p className="text-[#475569] dark:text-[#94A3B8] text-xs sm:text-sm">
+              We engineered a complete high-fidelity workspace covering habits tracking, daily routines scheduling, task checklists, and yearly progress analytics.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {/* Feature 1: Habits Checklist */}
+            <div className="bg-white dark:bg-[#141923] border border-[#E2E8F0] dark:border-[#2E3A4E] p-6 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-[#0D9488] mb-5">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
+                Habit Tracking Checklist
+              </h3>
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-4">
+                Structured monthly habit spreadsheets featuring date locks. Automatically centers and auto-scrolls the active day column on launch, so you can check boxes without vertical scroll distraction.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-semibold rounded-md border border-emerald-500/20">Date Lock</span>
+                <span className="px-2 py-0.5 bg-cyan-500/10 text-cyan-500 text-[10px] font-semibold rounded-md border border-cyan-500/20">Auto-Scroll</span>
+              </div>
+            </div>
+
+            {/* Feature 2: Routine Scheduler */}
+            <div className="bg-white dark:bg-[#141923] border border-[#E2E8F0] dark:border-[#2E3A4E] p-6 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mb-5">
+                <Calendar className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
+                6x6 Routine Scheduler
+              </h3>
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-4">
+                Configure time slot boundaries across a Saturday-Friday weekly calendar. Run integrated stopwatch focus intervals with alarms to audit study blocks and prevent fatigue.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-blue-500/10 text-blue-500 text-[10px] font-semibold rounded-md border border-blue-500/20">Stopwatch Audit</span>
+                <span className="px-2 py-0.5 bg-rose-500/10 text-rose-500 text-[10px] font-semibold rounded-md border border-rose-500/20">Sound Alarm</span>
+              </div>
+            </div>
+
+            {/* Feature 3: Todo list */}
+            <div className="bg-white dark:bg-[#141923] border border-[#E2E8F0] dark:border-[#2E3A4E] p-6 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-violet-500/10 flex items-center justify-center text-violet-650 dark:text-violet-400 mb-5">
+                <ListTodo className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
+                MongoDB To-Do Checklist
+              </h3>
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-4">
+                Perform full CRUD operations on tasks. Backed by MongoDB API routes. Categorize list items (Work, Personal, Wellness) with priority colors, statuses, and custom estimated durations.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-violet-500/10 text-violet-500 text-[10px] font-semibold rounded-md border border-violet-500/20">MongoDB Database</span>
+                <span className="px-2 py-0.5 bg-orange-500/10 text-orange-500 text-[10px] font-semibold rounded-md border border-orange-500/20">Categories</span>
+              </div>
+            </div>
+
+            {/* Feature 4: Annual Dashboard */}
+            <div className="bg-white dark:bg-[#141923] border border-[#E2E8F0] dark:border-[#2E3A4E] p-6 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-550 mb-5">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
+                Annual Progress Analytics
+              </h3>
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-4">
+                Unified Yearly Progress Dashboard combining data vectors. Includes combined progress line charts, monthly overview bar charts, top-10 check-in rankings, breakdown charts, and average progress gauges.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 text-[10px] font-semibold rounded-md border border-amber-500/20">Annual Charts</span>
+                <span className="px-2 py-0.5 bg-teal-500/10 text-teal-500 text-[10px] font-semibold rounded-md border border-teal-500/20">Analytics Gauges</span>
+              </div>
+            </div>
+
+            {/* Feature 5: User Profile Customizer */}
+            <div className="bg-white dark:bg-[#141923] border border-[#E2E8F0] dark:border-[#2E3A4E] p-6 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-pink-500/10 flex items-center justify-center text-pink-500 mb-5">
+                <User className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
+                Profile Customizer
+              </h3>
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-4">
+                Update account details, change role profiles (Student, Athlete, Gym, Other) and customize profile details. Integrates seamlessly with local states and embeds the Annual Dashboard directly.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-pink-500/10 text-pink-500 text-[10px] font-semibold rounded-md border border-pink-500/20">Google Avatar</span>
+                <span className="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-semibold rounded-md border border-purple-500/20">Role Metadata</span>
+              </div>
+            </div>
+
+            {/* Feature 6: Admin Security Console */}
+            <div className="bg-white dark:bg-[#141923] border border-[#E2E8F0] dark:border-[#2E3A4E] p-6 rounded-3xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-5">
+                <Lock className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
+                Restricted Security Console
+              </h3>
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-4">
+                Protects administrative actions. Verification filters restrict admin panel access to authorized accounts (`shommo.nexus@gmail.com`), showing connection diagnostics and system configurations.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-rose-500/10 text-rose-500 text-[10px] font-semibold rounded-md border border-rose-500/20">Google Auth Check</span>
+                <span className="px-2 py-0.5 bg-slate-500/10 text-slate-400 text-[10px] font-semibold rounded-md border border-slate-500/20">Diagnostic Gateway</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Core Value/Human Transformation Sections (Designed For / Replaces Course Cards) */}
+      <div id="how-goalpilot-restructures" className="bg-[#F8FAFC] dark:bg-[#1F2736] border-b border-[#E2E8F0] dark:border-[#2E3A4E] py-20 transition-all duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-[#0D9488] text-xs font-mono uppercase tracking-widest font-bold">
@@ -105,7 +228,7 @@ const Pages = () => {
             {/* Value 3 */}
             <div className="bg-white dark:bg-[#141923] border border-[#E2E8F0] dark:border-[#2E3A4E] p-6 rounded-2xl flex flex-col justify-between transition-colors duration-200">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-600 dark:text-violet-400 font-bold">
+                <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-650 dark:text-violet-400 font-bold">
                   <RefreshCw className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-bold text-[#0F172A] dark:text-white">
@@ -119,7 +242,7 @@ const Pages = () => {
               </div>
               <div className="pt-6 border-t border-[#E2E8F0] dark:border-[#2E3A4E] mt-6 flex justify-between items-center text-[10px] font-mono text-[#475569] dark:text-[#94A3B8]">
                 <span>Stopwatch Audit Loop</span>
-                <span className="text-violet-600 dark:text-violet-400 font-bold">
+                <span className="text-violet-650 dark:text-violet-400 font-bold">
                   Archive Log telemetry
                 </span>
               </div>
@@ -128,8 +251,8 @@ const Pages = () => {
         </div>
       </div>
 
-      {/* Pricing Section (Free Tier vs. Premium Telemetry Flight License) */}
-      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white dark:bg-[#141923] transition-colors duration-200">
+      {/* 3. Pricing Section (Free Tier vs. Premium Telemetry Flight License) */}
+      <div id="pricing-flight-license" className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white dark:bg-[#141923] transition-colors duration-200">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <span className="text-[#0D9488] text-xs font-mono uppercase tracking-widest font-bold">
             ACQUISITIONS PORTAL
