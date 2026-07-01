@@ -24,6 +24,22 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("home"); // "home" or "students"
 
   useEffect(() => {
+
+        if (!isPending && !session) {
+            router.replace("/");
+        }
+
+    }, [session, isPending]);
+
+    if (isPending) {
+        return <div>Loading...</div>;
+    }
+
+    if (!session) {
+        return null;
+    }
+
+  useEffect(() => {
     setMounted(true);
   }, []);
 
