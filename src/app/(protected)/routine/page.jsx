@@ -150,20 +150,10 @@ export default function RoutinePage() {
     } = authClient.useSession();
 
     useEffect(() => {
-
         if (!isPending && !session) {
             router.replace("/");
         }
-
-    }, [session, isPending]);
-
-    if (isPending) {
-        return <div>Loading...</div>;
-    }
-
-    if (!session) {
-        return null;
-    }
+    }, [session, isPending, router]);
 
 
   const [currentTime, setCurrentTime] = useState(null);
@@ -302,7 +292,7 @@ export default function RoutinePage() {
     return () => clearInterval(timer);
   }, [isFocusModeActive, isStopwatchPaused, speedMultiplier]);
 
-  const handleSessionComplete = () => {
+  function handleSessionComplete() {
     setIsFocusModeActive(false);
     setRoutine(prev => {
       const updatedList = prev[activeDayName].map(item => item.id === activeSession.id ? { ...item, completed: true } : item);
@@ -327,7 +317,7 @@ export default function RoutinePage() {
     } else {
       addToast(`All scheduled routine sessions for today are completed!`, "success");
     }
-  };
+  }
 
   useEffect(() => {
     if (!isTransitionCountdownActive || !nextPendingSession) return;
@@ -345,11 +335,11 @@ export default function RoutinePage() {
     return () => clearInterval(timer);
   }, [isTransitionCountdownActive, nextPendingSession, activeDayName]);
 
-  const addToast = (message, type = "info") => {
+  function addToast(message, type = "info") {
     const id = Date.now() + Math.random().toString();
     setToasts(prev => [...prev, { id, message, type }]);
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 6000);
-  };
+  }
 
   const handleTriggerTestSession = () => {
     if (!todayDayName) return;
@@ -384,6 +374,14 @@ export default function RoutinePage() {
     const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
     return { total, completed, percent };
   }, [routine]);
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (!session) {
+    return null;
+  }
 
   const handleResetAll = () => {
     if (confirm("Are you sure you want to reset the routine grid and clear all status checks?")) {

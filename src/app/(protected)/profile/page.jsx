@@ -10,6 +10,7 @@ import {
   Line,
   BarChart,
   Bar,
+  LabelList,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -166,7 +167,7 @@ export default function ProfilePage() {
         const calculatedMonthlyOverview = months.map((m, index) => {
           const monthNum = String(index + 1).padStart(2, "0");
           const key = `${year}-${monthNum}`;
-          const completed = habitsPerMonth[key] !== undefined ? habitsPerMonth[key] : baseHabitCompleted[index] * 10;
+          const completed = habitsPerMonth[key] !== undefined ? habitsPerMonth[key] : 0;
           const goal = baseHabitGoals[index] * 12;
           const remaining = Math.max(0, goal - completed);
           return { name: m, Completed: completed, Goal: goal, Remaining: remaining };
@@ -176,7 +177,7 @@ export default function ProfilePage() {
         const combined = months.map((m, index) => {
           const monthNum = String(index + 1).padStart(2, "0");
           const key = `${year}-${monthNum}`;
-          let realHabitProgress = baseHabitCompleted[index] * 5;
+          let realHabitProgress = 0;
           if (habitsPerMonth[key] !== undefined) {
             const completed = habitsPerMonth[key];
             const goal = baseHabitGoals[index] * 12;
@@ -760,7 +761,22 @@ export default function ProfilePage() {
                           <RTooltip
                             contentStyle={{ backgroundColor: "#1e293b", borderColor: "#334155", borderRadius: "12px", color: "#f8fafc" }}
                           />
-                          <Bar dataKey="Completed" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={30} />
+                          <Bar dataKey="Completed" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={30}>
+                            <LabelList
+                              dataKey="Completed"
+                              content={(props) => {
+                                const { x, y, width, value } = props;
+                                if (value === 0) {
+                                  return (
+                                    <text x={x + width / 2} y={y - 10} fill="#f43f5e" textAnchor="middle" fontSize={10} fontWeight="bold">
+                                      grow up
+                                    </text>
+                                  );
+                                }
+                                return null;
+                              }}
+                            />
+                          </Bar>
                           <Line type="monotone" dataKey="Goal" stroke="#06b6d4" strokeWidth={2} strokeDasharray="5 5" dot={false} />
                           <Line type="monotone" dataKey="Remaining" stroke="#f43f5e" strokeWidth={2} strokeDasharray="3 3" dot={false} />
                         </BarChart>

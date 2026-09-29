@@ -227,7 +227,7 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, lastDate, tasks, dayCounter]);
 
-  const handleNewDay = (newDate) => {
+  function handleNewDay(newDate) {
     setLastDate(newDate);
 
     // Move incomplete tasks → Extra Days
@@ -275,7 +275,7 @@ export default function Page() {
     } else {
       setDayCounter(newDayCounter);
     }
-  };
+  }
 
   /* ---------- derived chart data ---------- */
   const statusData = useMemo(

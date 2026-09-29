@@ -9,6 +9,12 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client
   }),
+  account: {
+    storeStateStrategy: "cookie",
+  },
+  advanced: {
+    useSecureCookies: process.env.NODE_ENV === "production",
+  },
   emailAndPassword: { 
     enabled: true, 
   }, 

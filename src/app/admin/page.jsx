@@ -24,20 +24,10 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("home"); // "home" or "students"
 
   useEffect(() => {
-
-        if (!isPending && !session) {
-            router.replace("/");
-        }
-
-    }, [session, isPending]);
-
-    if (isPending) {
-        return <div>Loading...</div>;
+    if (!isPending && !session) {
+      router.replace("/");
     }
-
-    if (!session) {
-        return null;
-    }
+  }, [session, isPending, router]);
 
   useEffect(() => {
     setMounted(true);
@@ -68,6 +58,10 @@ export default function AdminDashboard() {
         <Spinner size="lg" color="danger" label="Initializing administrative security gateway..." />
       </div>
     );
+  }
+
+  if (!session) {
+    return null;
   }
 
   // --- STRICT AUTH CHECK: Google Auth login must have the exact email shommo.nexus@gmail.com ---
@@ -140,9 +134,52 @@ export default function AdminDashboard() {
     }));
   };
 
-  // Dummy action for demo purpose
-  const handleDeleteUser = (userId) => {
-    setMockUsers((prev) => prev.filter((u) => u.id !== userId));
+  const handleDeleteUser = async (email, name) => {
+    if (email === "shommo.nexus@gmail.com") {
+      alert("You cannot delete the Super Admin account.");
+      return;
+    }
+
+    if (!window.confirm(`Are you sure you want to permanently delete user "${name}" (${email})? This will delete all their data, tasks, and configurations.`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:8080/api/admin/users/${encodeURIComponent(email)}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        alert(json.message || "User account deleted successfully.");
+        setUsersList((prev) => prev.filter((u) => u.email !== email));
+      } else {
+        alert(json.error || "Failed to delete user account.");
+      }
+    } catch (err) {
+      console.error("Delete user error", err);
+      alert("Failed to connect to administrative gateway server to delete user.");
+    }
+  };
+
+  const handleResetPassword = async (email) => {
+    if (!window.confirm(`Are you sure you want to revoke all active sessions for ${email}?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:8080/api/admin/users/${encodeURIComponent(email)}/reset`, {
+        method: "POST",
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        alert(json.message || "User sessions revoked successfully.");
+      } else {
+        alert(json.error || "Failed to revoke sessions.");
+      }
+    } catch (err) {
+      console.error("Reset sessions error", err);
+      alert("Failed to connect to administrative gateway server to reset session.");
+    }
   };
 
   return (
@@ -339,6 +376,7 @@ export default function AdminDashboard() {
                                 variant="light"
                                 className="text-slate-400 hover:text-white min-w-0 p-1 border-none cursor-pointer"
                                 title="Reset Password / Security Token"
+                                onClick={() => handleResetPassword(user.email)}
                               >
                                 <Key className="w-4 h-4" />
                               </Button>
@@ -348,6 +386,7 @@ export default function AdminDashboard() {
                                 className="text-slate-400 hover:text-rose-500 min-w-0 p-1 border-none cursor-pointer"
                                 disabled={user.email === "shommo.nexus@gmail.com"}
                                 title="Delete Account"
+                                onClick={() => handleDeleteUser(user.email, user.name)}
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>

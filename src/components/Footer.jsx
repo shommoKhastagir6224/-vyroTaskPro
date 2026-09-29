@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const Footer = () => {
   return (
@@ -57,13 +56,13 @@ const Footer = () => {
                 "Routine Planner",
                 "Progress Analytics",
               ].map((item) => (
-                <a
+                <Link
                   key={item}
                   href="#"
                   className="text-[13px] text-white/38 hover:text-white/75 transition-colors"
                 >
                   {item}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
@@ -80,13 +79,13 @@ const Footer = () => {
                 "Community",
                 "Support",
               ].map((item) => (
-                <a
+                <Link
                   key={item}
                   href="#"
                   className="text-[13px] text-white/38 hover:text-white/75 transition-colors"
                 >
                   {item}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
@@ -101,13 +100,13 @@ const Footer = () => {
                 "Terms of Service",
                 "Cookie Policy",
               ].map((item) => (
-                <a
+                <Link
                   key={item}
                   href="#"
                   className="text-[13px] text-white/38 hover:text-white/75 transition-colors"
                 >
                   {item}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
